@@ -162,7 +162,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/11/09/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/11/09/timeSplite/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -176,7 +176,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/11/09/hello-world/" class="post-title-link" itemprop="url">获取一定时间间隔的日期</a>
+            <a href="/2022/11/09/timeSplite/" class="post-title-link" itemprop="url">获取一定时间间隔的日期</a>
         </h2>
 
         <div class="post-meta">
@@ -187,7 +187,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-11-09 13:26:44 / 修改时间：15:44:30" itemprop="dateCreated datePublished" datetime="2022-11-09T13:26:44+08:00">2022-11-09</time>
+              <time title="创建时间：2022-11-09 13:26:44 / 修改时间：15:48:02" itemprop="dateCreated datePublished" datetime="2022-11-09T13:26:44+08:00">2022-11-09</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -210,179 +210,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <pre><code class="java">import cn.hutool.core.collection.CollectionUtil;
-import java.text.SimpleDateFormat;
-import java.time.ZoneId;
-import java.util.*;
-
-
-public class SplitDateUtil &#123;
-
-    private static final SimpleDateFormat monthDateFormat = new SimpleDateFormat(&quot;MM&quot;);
-
-    //将时间段按星期分割
-    public static List&lt;Range&gt; splitToWeeks(Date start, Date end) &#123;
-        List&lt;Range&gt; result = new ArrayList&lt;&gt;();
-        result.add(Range.create(start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
-        Date from = new Date(start.getTime() + 7L * 24 * 3600 * 1000);
-        Date weekEnd = cn.hutool.core.date.DateUtil.endOfWeek(end);
-        while (from.compareTo(weekEnd) &lt;= 0) &#123;
-            Date dt = cn.hutool.core.date.DateUtil.beginOfWeek(from);
-            CollectionUtil.getLast(result).end(new Date(dt.getTime() - 24L * 3600 * 1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-            CollectionUtil.getLast(result).setMonth(monthDateFormat.format(new Date(dt.getTime() - 24L * 3600 * 1000)));
-            result.add(Range.create(dt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
-            from.setTime(from.getTime() + 7L * 24 * 3600 * 1000);
-        &#125;
-        CollectionUtil.getLast(result).end(end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        CollectionUtil.getLast(result).setMonth(monthDateFormat.format(end));
-        return result;
-    &#125;
-
-    //将时间段按照月分割
-    public static List&lt;Range&gt; splitToMonths(Date start, Date end) &#123;
-        List&lt;Range&gt; result = new ArrayList&lt;&gt;();
-        result.add(Range.create(start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(start);
-        cal.add(Calendar.MONTH, 1);
-        Date monthEnd = cn.hutool.core.date.DateUtil.endOfMonth(end);
-        while (cal.getTimeInMillis() &lt;= monthEnd.getTime()) &#123;
-            Date dt = cn.hutool.core.date.DateUtil.beginOfMonth(cal.getTime());
-            CollectionUtil.getLast(result).end(new Date(dt.getTime() - 24L * 3600 * 1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-            CollectionUtil.getLast(result).setMonth(monthDateFormat.format(new Date(dt.getTime() - 24L * 3600 * 1000)));
-            result.add(Range.create(dt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
-            cal.add(Calendar.MONTH, 1);
-        &#125;
-        CollectionUtil.getLast(result).end(end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        CollectionUtil.getLast(result).setMonth(monthDateFormat.format(end));
-        return result;
-    &#125;
-
-    //将时间段按照季度分割
-    public static List&lt;Range&gt; splitToQuarts(Date start, Date end) &#123;
-        List&lt;Range&gt; result = new ArrayList&lt;&gt;();
-        result.add(Range.create(start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(start);
-        cal.add(Calendar.MONTH, 3);
-        Date quartEnd = cn.hutool.core.date.DateUtil.endOfQuarter(end);
-        while (cal.getTimeInMillis() &lt;= quartEnd.getTime()) &#123;
-            Date dt = cn.hutool.core.date.DateUtil.beginOfQuarter(cal.getTime());
-            CollectionUtil.getLast(result).end(new Date(dt.getTime() - 24L * 3600 * 1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-            if (cal.get(Calendar.MONTH) &gt;= 1 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 3) &#123;
-                CollectionUtil.getLast(result).setMonth(&quot;4&quot;);
-            &#125; else if (cal.get(Calendar.MONTH) &gt;= 4 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 6) &#123;
-                CollectionUtil.getLast(result).setMonth(&quot;1&quot;);
-            &#125; else if (cal.get(Calendar.MONTH) &gt;= 7 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 9) &#123;
-                CollectionUtil.getLast(result).setMonth(&quot;2&quot;);
-            &#125; else if (cal.get(Calendar.MONTH) &gt;= 10 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 12) &#123;
-                CollectionUtil.getLast(result).setMonth(&quot;3&quot;);
-            &#125;
-            result.add(Range.create(dt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
-            cal.add(Calendar.MONTH, 3);
-        &#125;
-        CollectionUtil.getLast(result).end(end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        if (cal.get(Calendar.MONTH) &gt;= 1 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 3) &#123;
-            CollectionUtil.getLast(result).setMonth(&quot;4&quot;);
-        &#125; else if (cal.get(Calendar.MONTH) &gt;= 4 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 6) &#123;
-            CollectionUtil.getLast(result).setMonth(&quot;1&quot;);
-        &#125; else if (cal.get(Calendar.MONTH) &gt;= 7 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 9) &#123;
-            CollectionUtil.getLast(result).setMonth(&quot;2&quot;);
-        &#125; else if (cal.get(Calendar.MONTH) &gt;= 10 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 12) &#123;
-            CollectionUtil.getLast(result).setMonth(&quot;3&quot;);
-        &#125;
-        return result;
-    &#125;
-
-    //将时间段按照半年分割
-    public static List&lt;Range&gt; splitToHalfOfYears(Date start, Date end) &#123;
-        List&lt;Range&gt; result = new ArrayList&lt;&gt;();
-        result.add(Range.create(start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(start);
-        cal.add(Calendar.MONTH, 6);
-        Calendar calOne = Calendar.getInstance();
-        calOne.setTime(end);
-        int mon = cal.get(Calendar.MONTH);
-        Calendar halfYearEnd = cn.hutool.core.date.DateUtil.endOfMonth(calOne);
-        while (cal.getTimeInMillis() &lt;= halfYearEnd.getTimeInMillis()) &#123;
-            mon = cal.get(Calendar.MONTH);
-            Calendar cal1 = Calendar.getInstance();
-            if (mon &lt; 6) &#123;
-                cal1.setTimeInMillis(cal.getTimeInMillis());
-                cal1.set(Calendar.MONTH, 0);
-            &#125; else &#123;
-                cal1.setTimeInMillis(cal.getTimeInMillis());
-                cal1.set(Calendar.MONTH, 6);
-            &#125;
-            Date dt = cn.hutool.core.date.DateUtil.beginOfMonth(cal1.getTime());
-            CollectionUtil.getLast(result).end(new Date(dt.getTime() - 24L * 3600 * 1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-            result.add(Range.create(dt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
-            cal.add(Calendar.MONTH, 6);
-        &#125;
-        CollectionUtil.getLast(result).end(end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        return result;
-    &#125;
-
-    //将时间段按照年分割
-    public static List&lt;Range&gt; splitToYears(Date start, Date end) &#123;
-        List&lt;Range&gt; result = new ArrayList&lt;&gt;();
-        result.add(Range.create(start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(start);
-        cal.add(Calendar.YEAR, 1);
-        Date yearEnd = cn.hutool.core.date.DateUtil.endOfYear(end);
-        while (cal.getTimeInMillis() &lt;= yearEnd.getTime()) &#123;
-            Date dt = cn.hutool.core.date.DateUtil.beginOfYear(cal.getTime());
-            CollectionUtil.getLast(result).end(new Date(dt.getTime() - 24L * 3600 * 1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-            result.add(Range.create(dt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
-            cal.add(Calendar.YEAR, 1);
-        &#125;
-        CollectionUtil.getLast(result).end(end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        return result;
-    &#125;
-
-    //根据年，月，第几周获取时间范围
-    public static Map getWeekDateLimits(String year, String month, String week) &#123;
-        Map result = new HashMap();
-        SimpleDateFormat dft = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);
-        Calendar c1 = Calendar.getInstance();
-        c1.set(Calendar.YEAR, Integer.parseInt(year));
-        c1.set(Calendar.MONTH, Integer.parseInt(month) - 1);
-        c1.set(Calendar.DAY_OF_WEEK, 2);
-        c1.set(Calendar.WEEK_OF_MONTH, Integer.parseInt(week));
-        Date time1 = c1.getTime();
-        String begin = dft.format(time1);
-        c1.set(Calendar.DATE, c1.get(Calendar.DATE) + 6);
-        Date time2 = c1.getTime();
-        String end = dft.format(time2);
-        result.put(&quot;begin&quot;, begin);
-        result.put(&quot;end&quot;, end);
-        return result;
-    &#125;
-
-
-    public static void main(String[] args) &#123;
-        try &#123;
-            Calendar c = Calendar.getInstance();
-            c.set(Calendar.YEAR, 2021);
-            c.set(Calendar.MONTH, (5 - 1));
-            c.setFirstDayOfWeek(Calendar.MONDAY);
-            System.out.println( c.get(Calendar.YEAR) + &quot;年&quot; + (c.get(Calendar.MONTH) + 1) + &quot;月&quot;);
-            System.out.println(&quot;天数：&quot; + c.getActualMaximum(Calendar.DAY_OF_MONTH));
-            System.out.println(&quot;Actual周数：&quot; + c.getActualMaximum(Calendar.WEEK_OF_MONTH));
-            System.out.println(&quot;Max周数：&quot; + c.getMaximum(Calendar.WEEK_OF_MONTH));
-            for (int i = 0; i &lt; 6; i++) &#123;
-                System.out.println(getWeekDateLimits(2021 + &quot;&quot;, 5 + &quot;&quot;, (i + 1) + &quot;&quot;));
-            &#125;
-        &#125; catch (Exception e) &#123;
-            e.printStackTrace();
-        &#125;
-    &#125;
-
-&#125;
-</code></pre>
-
+          <p>按周月纪年分割时间，作统计维度。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/11/09/timeSplite/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
