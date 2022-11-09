@@ -20,19 +20,20 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="足迹">
-<meta property="og:type" content="website">
-<meta property="og:title" content="资源">
-<meta property="og:url" content="http://example.com/resources/index.html">
+  <meta name="description" content="spring初始化过程口语化表达 AbstractApplicationContext.refresh()方法 通过obtainFreshBeanFactory()方法获取一个beanFactory,在该方法内，spring会创建一个新的beanFactory并通过loadBeanDefinitions()方法加载并解析bean，将bean封装成BeanDefinitions 之后spring会通">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试总结">
+<meta property="og:url" content="http://example.com/2022/11/09/spring_init/index.html">
 <meta property="og:site_name" content="天动万象">
-<meta property="og:description" content="足迹">
+<meta property="og:description" content="spring初始化过程口语化表达 AbstractApplicationContext.refresh()方法 通过obtainFreshBeanFactory()方法获取一个beanFactory,在该方法内，spring会创建一个新的beanFactory并通过loadBeanDefinitions()方法加载并解析bean，将bean封装成BeanDefinitions 之后spring会通">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-11-09T06:44:10.000Z">
-<meta property="article:modified_time" content="2022-11-09T06:46:16.592Z">
+<meta property="article:published_time" content="2022-11-09T08:08:18.849Z">
+<meta property="article:modified_time" content="2022-11-09T08:14:40.648Z">
 <meta property="article:author" content="wang">
+<meta property="article:tag" content="面试">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/resources/">
+<link rel="canonical" href="http://example.com/2022/11/09/spring_init/">
 
 
 <script id="page-configurations">
@@ -40,13 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>资源 | 天动万象
-</title>
+  <title>面试总结 | 天动万象</title>
   
 
 
@@ -158,43 +158,113 @@
       <div class="main-inner">
         <div class="content-wrap">
           
-  
-  
 
-          <div class="content page posts-expand">
+          <div class="content post posts-expand">
             
 
     
-    
-    
-    <div class="post-block" lang="zh-CN">
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/11/09/spring_init/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="wang">
+      <meta itemprop="description" content="足迹">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="天动万象">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          面试总结
+        </h1>
 
-<h1 class="post-title" itemprop="name headline">资源
-</h1>
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
 
-<div class="post-meta">
+              <time title="创建时间：2022-11-09 16:08:18 / 修改时间：16:14:40" itemprop="dateCreated datePublished" datetime="2022-11-09T16:08:18+08:00">2022-11-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="spring初始化过程口语化表达"><a href="#spring初始化过程口语化表达" class="headerlink" title="spring初始化过程口语化表达"></a>spring初始化过程口语化表达</h3><ol>
+<li>AbstractApplicationContext.refresh()方法</li>
+<li>通过obtainFreshBeanFactory()方法获取一个beanFactory,在该方法内，spring会创建一个新的beanFactory并通过loadBeanDefinitions()方法加载并解析bean，将bean封装成BeanDefinitions</li>
+<li>之后spring会通过invokeBeanFactoryPostProcessors（）方法调用beanFactory的后置处理器</li>
+<li>接着通过registerBeanPostProcessors（）方法加载bean的后置处理器，只不过bean的后置处理器现在不会触发，等到bean的初始化前后才会触发</li>
+<li>然后spring会通过finishBeanFactoryInitialization（）实例化所有剩余的bean的实例</li>
+<li>最后通过finishRefresh（）方法完成容器刷新</li>
+</ol>
+<h3 id="spring-bean生命周期"><a href="#spring-bean生命周期" class="headerlink" title="spring bean生命周期"></a>spring bean生命周期</h3><ol>
+<li>首先是实例化bean对象，通过createBeanInstance()方法反射获取bean的构造方法进行实例化</li>
+<li>之后调用polulateBean()方法进行属性填充</li>
+<li>然后调用initializeBean()进行初始化，其中会先调用invokeAwareMethods（）方法判断bean是否实现beanNameAware,beanClassLoaderAware,BeanFactoryAware之类的接口，如果实现了就将其加载进来</li>
+<li>之后会调用applyBeanPostProcessorsBeforeInitialization（）进行初始化的前置处理</li>
+<li>之后会调用invokeInitMethods（）方法进行初始化，该方法中会判断bean有没有实现InitializingBean接口，如果有就通过afterPropertiesSet（）方法设置，</li>
+<li>如果使用xml的话，会调用init-method方法进行初始化 </li>
+<li>接着spring会调用applyBeanPostProcessorsAfterInitialization（）方法完成初始化的后置处理，aop就发生在该阶段</li>
+<li>初始化之后就可以正常使用</li>
+<li>进入销毁阶段后，spring会判断bean有没有disposableBean接口，有就调用其destroy()方法，如果bean配置了自定义的destroy-method,最后也会调用自定义的destroy-method方法</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/11/09/timeSplite/" rel="prev" title="获取一定时间间隔的日期">
+      <i class="fa fa-chevron-left"></i> 获取一定时间间隔的日期
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/11/09/javaTreeBuild/" rel="next" title="构建树">
+      构建树 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
-          
-      </div>
-      
-      
-      
-    </div>
-    
-
-    
-    
-    
 
 
           </div>
@@ -245,6 +315,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#spring%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B%E5%8F%A3%E8%AF%AD%E5%8C%96%E8%A1%A8%E8%BE%BE"><span class="nav-number">1.</span> <span class="nav-text">spring初始化过程口语化表达</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-bean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.</span> <span class="nav-text">spring bean生命周期</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
