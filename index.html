@@ -332,10 +332,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-11-09 16:08:18 / 修改时间：16:14:40" itemprop="dateCreated datePublished" datetime="2022-11-09T16:08:18+08:00">2022-11-09</time>
+              <time title="创建时间：2022-11-09 16:08:18" itemprop="dateCreated datePublished" datetime="2022-11-09T16:08:18+08:00">2022-11-09</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-11-10 09:20:37" itemprop="dateModified" datetime="2022-11-10T09:20:37+08:00">2022-11-10</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -363,20 +369,15 @@
 <li>之后spring会通过invokeBeanFactoryPostProcessors（）方法调用beanFactory的后置处理器</li>
 <li>接着通过registerBeanPostProcessors（）方法加载bean的后置处理器，只不过bean的后置处理器现在不会触发，等到bean的初始化前后才会触发</li>
 <li>然后spring会通过finishBeanFactoryInitialization（）实例化所有剩余的bean的实例</li>
-<li>最后通过finishRefresh（）方法完成容器刷新</li>
-</ol>
-<h3 id="spring-bean生命周期"><a href="#spring-bean生命周期" class="headerlink" title="spring bean生命周期"></a>spring bean生命周期</h3><ol>
-<li>首先是实例化bean对象，通过createBeanInstance()方法反射获取bean的构造方法进行实例化</li>
-<li>之后调用polulateBean()方法进行属性填充</li>
-<li>然后调用initializeBean()进行初始化，其中会先调用invokeAwareMethods（）方法判断bean是否实现beanNameAware,beanClassLoaderAware,BeanFactoryAware之类的接口，如果实现了就将其加载进来</li>
-<li>之后会调用applyBeanPostProcessorsBeforeInitialization（）进行初始化的前置处理</li>
-<li>之后会调用invokeInitMethods（）方法进行初始化，该方法中会判断bean有没有实现InitializingBean接口，如果有就通过afterPropertiesSet（）方法设置，</li>
-<li>如果使用xml的话，会调用init-method方法进行初始化 </li>
-<li>接着spring会调用applyBeanPostProcessorsAfterInitialization（）方法完成初始化的后置处理，aop就发生在该阶段</li>
-<li>初始化之后就可以正常使用</li>
-<li>进入销毁阶段后，spring会判断bean有没有disposableBean接口，有就调用其destroy()方法，如果bean配置了自定义的destroy-method,最后也会调用自定义的destroy-method方法</li>
-</ol>
-
+<li>最后通过finishRefresh（）方法完成容器刷新
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/11/09/spring_init/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
