@@ -1,0 +1,677 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/geo.png">
+  <link rel="icon" href="/img/geo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Centos下试安装单机ELK">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Centos下试安装ELK">
+<meta property="og:url" content="http://example.com/2022/11/11/ELK%20install/index.html">
+<meta property="og:site_name" content="天动万象">
+<meta property="og:description" content="Centos下试安装单机ELK">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/pictures/alias.png">
+<meta property="og:image" content="http://example.com/pictures/alias_success.png">
+<meta property="og:image" content="http://example.com/pictures/kibana.png">
+<meta property="og:image" content="http://example.com/pictures/stack.png">
+<meta property="og:image" content="http://example.com/pictures/index_nginx.png">
+<meta property="og:image" content="http://example.com/pictures/index_life.png">
+<meta property="og:image" content="http://example.com/pictures/index_style.png">
+<meta property="og:image" content="http://example.com/pictures/index_style2.png">
+<meta property="og:image" content="http://example.com/pictures/new_dash.png">
+<meta property="og:image" content="http://example.com/pictures/new_dash_see.png">
+<meta property="og:image" content="http://example.com/pictures/dash.png">
+<meta property="og:image" content="http://example.com/pictures/dash2.png">
+<meta property="article:published_time" content="2022-11-11T08:24:52.588Z">
+<meta property="article:modified_time" content="2022-11-11T09:17:36.266Z">
+<meta property="article:author" content="wang">
+<meta property="article:tag" content="日志收集">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/pictures/alias.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Centos下试安装ELK - 天动万象</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"JAVA"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>天动万象</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Centos下试安装ELK"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-11 16:24" pubdate>
+          2022年11月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          39 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Centos下试安装ELK</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年11月11日 下午
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="安装应用"><a href="#安装应用" class="headerlink" title="安装应用"></a>安装应用</h2><h3 id="一、安装-amp-配置Elasticsearch"><a href="#一、安装-amp-配置Elasticsearch" class="headerlink" title="一、安装&amp;配置Elasticsearch"></a>一、安装&amp;配置Elasticsearch</h3><h4 id="1-1-下载安装包"><a href="#1-1-下载安装包" class="headerlink" title="1.1 下载安装包"></a>1.1 下载安装包</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">wget https:<span class="hljs-regexp">//</span>artifacts.elastic.co<span class="hljs-regexp">/downloads/</span>elasticsearch/elasticsearch-<span class="hljs-number">7.10</span>.<span class="hljs-number">1</span>-x86_64.rpm<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-2-安装"><a href="#1-2-安装" class="headerlink" title="1.2 安装"></a>1.2 安装</h4><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">rpm</span> -ivh elasticsearch-<span class="hljs-number">7</span>.<span class="hljs-number">10</span>.<span class="hljs-number">1</span>-x86_64.rpm<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-3-修改配置文件"><a href="#1-3-修改配置文件" class="headerlink" title="1.3 修改配置文件"></a>1.3 修改配置文件</h4><p>文件地址：&#x2F;etc&#x2F;elasticsearch&#x2F;elasticsearch.yml</p>
+<p>单节点配置如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">cluster.name:</span> <span class="hljs-string">elk</span><br><span class="hljs-attr">path.data:</span> <span class="hljs-string">/var/lib/elasticsearch</span><br><span class="hljs-attr">path.logs:</span> <span class="hljs-string">/var/log/elasticsearch</span><br><span class="hljs-attr">network.host:</span> <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><br><span class="hljs-attr">http.port:</span> <span class="hljs-number">9200</span><br><span class="hljs-attr">discovery.type:</span> <span class="hljs-string">single-node</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="1-4-启动"><a href="#1-4-启动" class="headerlink" title="1.4 启动"></a>1.4 启动</h4><figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs nsis"><span class="hljs-params">system</span>ctl enable elasticsearch<br><span class="hljs-params">system</span>ctl start elasticsearch<br></code></pre></td></tr></table></figure>
+
+<h3 id="二、安装-amp-配置Kibana"><a href="#二、安装-amp-配置Kibana" class="headerlink" title="二、安装&amp;配置Kibana"></a>二、安装&amp;配置Kibana</h3><h4 id="2-1-下载安装包"><a href="#2-1-下载安装包" class="headerlink" title="2.1 下载安装包"></a>2.1 下载安装包</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">wget https:<span class="hljs-regexp">//</span>artifacts.elastic.co<span class="hljs-regexp">/downloads/</span>kibana/kibana-<span class="hljs-number">7.10</span>.<span class="hljs-number">1</span>-x86_64.rpm<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-安装"><a href="#2-2-安装" class="headerlink" title="2.2 安装"></a>2.2 安装</h4><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">rpm</span> -ivh kibana-<span class="hljs-number">7</span>.<span class="hljs-number">10</span>.<span class="hljs-number">1</span>-x86_64.rpm<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-3-修改配置文件"><a href="#2-3-修改配置文件" class="headerlink" title="2.3 修改配置文件"></a>2.3 修改配置文件</h4><p>文件地址：&#x2F;etc&#x2F;kibana&#x2F;Kibana.yml</p>
+<p>配置如下：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus">server<span class="hljs-selector-class">.host</span>: <span class="hljs-string">&quot;0.0.0.0&quot;</span><br>i18n<span class="hljs-selector-class">.locale</span>: <span class="hljs-string">&quot;zh-CN&quot;</span><br>elasticsearch<span class="hljs-selector-class">.hosts</span>: <span class="hljs-selector-attr">[<span class="hljs-string">&quot;http://localhost:9200&quot;</span>]</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="2-4-启动"><a href="#2-4-启动" class="headerlink" title="2.4 启动"></a>2.4 启动</h4><figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs nsis"><span class="hljs-params">system</span>ctl enable kibana  <br><span class="hljs-params">system</span>ctl start kibana<br></code></pre></td></tr></table></figure>
+
+<h3 id="三、安装-amp-配置logstatsh"><a href="#三、安装-amp-配置logstatsh" class="headerlink" title="三、安装&amp;配置logstatsh"></a>三、安装&amp;配置logstatsh</h3><h4 id="3-1-下载安装包"><a href="#3-1-下载安装包" class="headerlink" title="3.1 下载安装包"></a>3.1 下载安装包</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">wget https:<span class="hljs-regexp">//</span>artifacts.elastic.co<span class="hljs-regexp">/downloads/</span>logstash/logstash-<span class="hljs-number">7.10</span>.<span class="hljs-number">1</span>.rpm<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-2-安装"><a href="#3-2-安装" class="headerlink" title="3.2 安装"></a>3.2 安装</h4><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">rpm</span> -vih logstash-<span class="hljs-number">7</span>.<span class="hljs-number">10</span>.<span class="hljs-number">1</span>.rpm<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-3-修改配置文件"><a href="#3-3-修改配置文件" class="headerlink" title="3.3 修改配置文件"></a>3.3 修改配置文件</h4><p>文件地址：&#x2F;etc&#x2F;logstash&#x2F;logstash.yml</p>
+<p>配置如下：</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs arcade">path.data: <span class="hljs-regexp">/var/</span>lib/logstash  <br>pipeline.ordered: auto  <br>path.logs: <span class="hljs-regexp">/var/</span><span class="hljs-built_in">log</span>/logstash<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-4-启动"><a href="#3-4-启动" class="headerlink" title="3.4 启动"></a>3.4 启动</h4><figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs nsis"><span class="hljs-params">system</span>ctl enable logstash  <br><span class="hljs-params">system</span>ctl start logstash<br></code></pre></td></tr></table></figure>
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>以收集nginx日志为例，在nginx所在服务器安装filebeat</p>
+<h3 id="一、安装-amp-配置filebeat"><a href="#一、安装-amp-配置filebeat" class="headerlink" title="一、安装&amp;配置filebeat"></a>一、安装&amp;配置filebeat</h3><h4 id="1-1-下载安装包-1"><a href="#1-1-下载安装包-1" class="headerlink" title="1.1 下载安装包"></a>1.1 下载安装包</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">wget https:<span class="hljs-regexp">//</span>artifacts.elastic.co<span class="hljs-regexp">/downloads/</span>filebeat/filebeat-<span class="hljs-number">7.10</span>.<span class="hljs-number">1</span>-x86_64.rpm<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-2-安装-1"><a href="#1-2-安装-1" class="headerlink" title="1.2 安装"></a>1.2 安装</h4><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">rpm</span> -ivh filebeat-<span class="hljs-number">7</span>.<span class="hljs-number">10</span>.<span class="hljs-number">1</span>-x86_64.rpm<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-3-修改配置文件-1"><a href="#1-3-修改配置文件-1" class="headerlink" title="1.3 修改配置文件"></a>1.3 修改配置文件</h4><p>文件地址：&#x2F;etc&#x2F;filebeat&#x2F;filebeat.yml</p>
+<p>配置如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">filebeat.inputs:</span>  <br>	<span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">log</span>  <br>		<span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>  <br>		<span class="hljs-attr">paths:</span> [<span class="hljs-string">&quot;/var/log/nginx/access.log&quot;</span>]  <br>		<span class="hljs-attr">tags:</span> [<span class="hljs-string">&quot;tomcat-nginx-access001&quot;</span>]  <br>		<span class="hljs-attr">fields:</span>  <br>		<span class="hljs-attr">index:</span> <span class="hljs-string">&#x27;tomcat-nginx-access001&#x27;</span>  <br>   <br>	<span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">filestream</span>  <br>		<span class="hljs-attr">enabled:</span> <span class="hljs-literal">false</span>  <br>		<span class="hljs-attr">paths:</span>  <br>	<span class="hljs-bullet">-</span> <span class="hljs-string">/var/log/*.log</span>  <br><span class="hljs-attr">setup.ilm.overwrite:</span> <span class="hljs-literal">true</span>  <br><span class="hljs-attr">filebeat.config.modules:</span>  <br>	<span class="hljs-attr">path:</span> <span class="hljs-string">$&#123;path.config&#125;/modules.d/*.yml</span>  <br>	<span class="hljs-attr">reload.enabled:</span> <span class="hljs-literal">false</span>  <br><span class="hljs-attr">setup.template.settings:</span>  <br>	<span class="hljs-attr">index.number_of_shards:</span> <span class="hljs-number">1</span>  <br><span class="hljs-attr">setup.template.name:</span> <span class="hljs-string">&quot;tomcat&quot;</span>  <br><span class="hljs-attr">setup.template.pattern:</span> <span class="hljs-string">&quot;tomcat-*&quot;</span>  <br><span class="hljs-attr">setup.template.overwrite:</span> <span class="hljs-literal">true</span>  <br><span class="hljs-attr">setup.template.enabled:</span> <span class="hljs-literal">true</span>  <br><span class="hljs-attr">setup.kibana:</span>  <br>	<span class="hljs-attr">host:</span> <span class="hljs-string">&quot;安装kibana服务器地址:5601&quot;</span>  <br><span class="hljs-attr">output.logstash:</span>  <br>	<span class="hljs-attr">hosts:</span> [<span class="hljs-string">&quot;安装logstash服务器地址:5044&quot;</span>]  <br><span class="hljs-attr">processors:</span>  <br>	<span class="hljs-bullet">-</span> <span class="hljs-attr">add_host_metadata:</span>  <br>		<span class="hljs-attr">when.not.contains.tags:</span> <span class="hljs-string">forwarded</span>  <br>	<span class="hljs-bullet">-</span> <span class="hljs-attr">add_cloud_metadata:</span> <span class="hljs-string">~</span>  <br>	<span class="hljs-bullet">-</span> <span class="hljs-attr">add_docker_metadata:</span> <span class="hljs-string">~</span>  <br>	<span class="hljs-bullet">-</span> <span class="hljs-attr">add_kubernetes_metadata:</span> <span class="hljs-string">~</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="1-4-运行命令"><a href="#1-4-运行命令" class="headerlink" title="1.4 运行命令"></a>1.4 运行命令</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">filebeat modules <span class="hljs-built_in">enable</span> nginx<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-5-修改配置文件"><a href="#1-5-修改配置文件" class="headerlink" title="1.5 修改配置文件"></a>1.5 修改配置文件</h4><p>文件地址：&#x2F;etc&#x2F;filebeat&#x2F;modules.d&#x2F;nginx.yml</p>
+<p>配置如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># Module: nginx  </span><br><span class="hljs-comment"># Docs: https://www.elastic.co/guide/en/beats/filebeat/7.10/filebeat-module-#nginx.html  </span><br>	  <br><span class="hljs-bullet">-</span> <span class="hljs-attr">module:</span> <span class="hljs-string">nginx</span>  <br><span class="hljs-comment"># Access logs  </span><br>	<span class="hljs-attr">access:</span>  <br>		<span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>  <br><span class="hljs-comment"># Set custom paths for the log files. If left empty,  </span><br> <span class="hljs-comment"># Filebeat will choose the paths depending on your OS.  </span><br>		<span class="hljs-attr">var.paths:</span> [<span class="hljs-string">&quot;/var/log/nginx/access.log&quot;</span>]  <br><span class="hljs-comment"># Error logs  </span><br>	<span class="hljs-attr">error:</span>  <br>		<span class="hljs-attr">enabled:</span> <span class="hljs-literal">false</span>  <br>  <br><span class="hljs-comment"># Set custom paths for the log files. If left empty,  </span><br><span class="hljs-comment"># Filebeat will choose the paths depending on your OS.  </span><br><span class="hljs-comment"># Ingress-nginx controller logs. This is disabled by default. It could be used #in Kubernetes environments to parse ingress-nginx logs  </span><br>	<span class="hljs-attr">ingress_controller:</span>  <br>		<span class="hljs-attr">enabled:</span> <span class="hljs-literal">false</span>  <br>  <br><span class="hljs-comment"># Set custom paths for the log files. If left empty,  </span><br><span class="hljs-comment"># Filebeat will choose the paths depending on your OS.  </span><br><span class="hljs-comment">#var.paths:</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="1-6-修改nginx日志格式"><a href="#1-6-修改nginx日志格式" class="headerlink" title="1.6 修改nginx日志格式"></a>1.6 修改nginx日志格式</h4><figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs julia">log_format  main  &#x27;&#123;<span class="hljs-string">&quot;@timestamp&quot;</span>:<span class="hljs-string">&quot;<span class="hljs-variable">$time_iso8601</span>&quot;</span>,&#x27;  <br>            &#x27;<span class="hljs-string">&quot;server_addr&quot;</span>:<span class="hljs-string">&quot;<span class="hljs-variable">$server_addr</span>&quot;</span>,&#x27;  <br>            &#x27;<span class="hljs-string">&quot;remote_addr&quot;</span>:<span class="hljs-string">&quot;<span class="hljs-variable">$remote_addr</span>&quot;</span>,&#x27;  <br>            &#x27;<span class="hljs-string">&quot;request_method&quot;</span>:<span class="hljs-string">&quot;<span class="hljs-variable">$request_method</span>&quot;</span>,&#x27;  <br>	        &#x27;<span class="hljs-string">&quot;uri&quot;</span>:<span class="hljs-string">&quot;<span class="hljs-variable">$uri</span>&quot;</span>,&#x27;  <br>            &#x27;<span class="hljs-string">&quot;upstream_response_time&quot;</span>:<span class="hljs-string">&quot;<span class="hljs-variable">$upstream_response_time</span>&quot;</span>,&#x27;  <br>            &#x27;<span class="hljs-string">&quot;request_uri&quot;</span>:<span class="hljs-string">&quot;<span class="hljs-variable">$request_uri</span>&quot;</span>,&#x27;  <br>            &#x27;<span class="hljs-string">&quot;request_time&quot;</span>:$request_time,&#x27;  <br>            &#x27;<span class="hljs-string">&quot;status&quot;</span>:<span class="hljs-string">&quot;<span class="hljs-variable">$status</span>&quot;</span>,&#x27;  <br>            &#x27;<span class="hljs-string">&quot;http_referer&quot;</span>:<span class="hljs-string">&quot;<span class="hljs-variable">$http_referer</span>&quot;</span>,&#x27;  <br>            &#x27;<span class="hljs-string">&quot;http_x_forwarded_for&quot;</span>:<span class="hljs-string">&quot;<span class="hljs-variable">$http_x_forwarded_for</span>&quot;</span>,&#x27;  <br>            &#x27;<span class="hljs-string">&quot;http_user_agent&quot;</span>:<span class="hljs-string">&quot;<span class="hljs-variable">$http_user_agent</span>&quot;</span>&#x27;  <br>            <span class="hljs-string">&#x27;&#125;&#x27;</span>;  <br>	  <br>   access_log  /var/log/nginx/access.log  main;<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-7-在logstash服务器新建配置"><a href="#1-7-在logstash服务器新建配置" class="headerlink" title="1.7 在logstash服务器新建配置"></a>1.7 在logstash服务器新建配置</h4><p>&#x2F;etc&#x2F;logstash&#x2F;conf.d&#x2F;目录中新建logstash.conf</p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs puppet">input&#123;  <br>    <span class="hljs-keyword">beats</span> &#123;  <br>        <span class="hljs-attr">port</span> =&gt; <span class="hljs-string">&quot;5044&quot;</span>  <br>        <span class="hljs-attr">codec</span> =&gt; <span class="hljs-string">&quot;json&quot;</span>  <br>    &#125;  <br>&#125;  <br><span class="hljs-keyword">filter</span> &#123;  <br>    <span class="hljs-keyword">if</span> <span class="hljs-string">&quot;tomcat-nginx-access001&quot;</span> <span class="hljs-keyword">in</span> [tags] &#123;  <br>        json &#123;  <br>            <span class="hljs-attr">source</span> =&gt; <span class="hljs-string">&quot;message&quot;</span>  <br>            <span class="hljs-attr">target</span> =&gt; <span class="hljs-string">&quot;msg_json&quot;</span>  <br>       &#125;  <br>   &#125;  <br>&#125;  <br><span class="hljs-keyword">output</span> &#123;  <br>    <span class="hljs-keyword">if</span> <span class="hljs-string">&quot;tomcat-nginx-access001&quot;</span> <span class="hljs-keyword">in</span> [tags]&#123;  <br>        elasticsearch &#123;  <br>            <span class="hljs-attr">hosts</span> =&gt; [<span class="hljs-string">&quot;localhost:9200&quot;</span>]  <br>            <span class="hljs-attr">index</span> =&gt; <span class="hljs-string">&quot;nginx-access001&quot;</span>  <br> 		&#125;           <br> 	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-8-重新启动logstash"><a href="#1-8-重新启动logstash" class="headerlink" title="1.8 重新启动logstash"></a>1.8 重新启动logstash</h4><figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs nsis"><span class="hljs-params">system</span>ctl restart logstash  <br><span class="hljs-params">system</span>ctl enable filebeat  <br><span class="hljs-params">system</span>ctl start filebeat<br></code></pre></td></tr></table></figure>
+
+<h3 id="二、配置elasticsearch、kibana"><a href="#二、配置elasticsearch、kibana" class="headerlink" title="二、配置elasticsearch、kibana"></a>二、配置elasticsearch、kibana</h3><h4 id="2-1-使用elasticsearch-head插件新建别名"><a href="#2-1-使用elasticsearch-head插件新建别名" class="headerlink" title="2.1 使用elasticsearch-head插件新建别名"></a>2.1 使用elasticsearch-head插件新建别名</h4><p><img src="/../pictures/alias.png" srcset="/img/loading.gif" lazyload>  <img src="/../pictures/alias_success.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="2-2-使用Kibana"><a href="#2-2-使用Kibana" class="headerlink" title="2.2 使用Kibana"></a>2.2 使用Kibana</h4><h6 id="2-2-1-访问Kibana服务地址"><a href="#2-2-1-访问Kibana服务地址" class="headerlink" title="2.2.1 访问Kibana服务地址"></a>2.2.1 访问Kibana服务地址</h6><p><img src="/../pictures/kibana.png" srcset="/img/loading.gif" lazyload></p>
+<h6 id="2-2-2-选择Stack-Management"><a href="#2-2-2-选择Stack-Management" class="headerlink" title="2.2.2 选择Stack Management"></a>2.2.2 选择Stack Management</h6><p><img src="/../pictures/stack.png" srcset="/img/loading.gif" lazyload></p>
+<h6 id="2-2-3-新建索引策略nginx-配置默认即可"><a href="#2-2-3-新建索引策略nginx-配置默认即可" class="headerlink" title="2.2.3 新建索引策略nginx,配置默认即可"></a>2.2.3 新建索引策略nginx,配置默认即可</h6><p><img src="/../pictures/index_nginx.png" srcset="/img/loading.gif" lazyload></p>
+<h6 id="2-2-4-点击索引管理，给索引添加生命周期策略"><a href="#2-2-4-点击索引管理，给索引添加生命周期策略" class="headerlink" title="2.2.4  点击索引管理，给索引添加生命周期策略"></a>2.2.4  点击索引管理，给索引添加生命周期策略</h6><p><img src="/../pictures/index_life.png" srcset="/img/loading.gif" lazyload></p>
+<h6 id="2-2-5-创建索引模式，并将模式指向索引"><a href="#2-2-5-创建索引模式，并将模式指向索引" class="headerlink" title="2.2.5 创建索引模式，并将模式指向索引"></a>2.2.5 创建索引模式，并将模式指向索引</h6><p><img src="/../pictures/index_style.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/../pictures/index_style2.png" srcset="/img/loading.gif" lazyload></p>
+<h6 id="2-2-6-创建完成返回Home-选择Kinaba仪表板，创建新的仪表板"><a href="#2-2-6-创建完成返回Home-选择Kinaba仪表板，创建新的仪表板" class="headerlink" title="2.2.6 创建完成返回Home,选择Kinaba仪表板，创建新的仪表板"></a>2.2.6 创建完成返回Home,选择Kinaba仪表板，创建新的仪表板</h6><p><img src="/../pictures/new_dash.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/../pictures/new_dash_see.png" srcset="/img/loading.gif" lazyload></p>
+<h6 id="2-2-7-通过选择X轴y轴数据，Kinaba自动形成图表"><a href="#2-2-7-通过选择X轴y轴数据，Kinaba自动形成图表" class="headerlink" title="2.2.7 通过选择X轴y轴数据，Kinaba自动形成图表"></a>2.2.7 通过选择X轴y轴数据，Kinaba自动形成图表</h6><p><img src="/../pictures/dash.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/../pictures/dash2.png" srcset="/img/loading.gif" lazyload></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86/">#日志收集</a>
+      
+    </div>
+  
+</div>
+
+
+              
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/11/application/" title="翻墙软件clash">
+                        <span class="hidden-mobile">翻墙软件clash</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
