@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>翻墙软件clash</title>
+    <link href="/2022/11/11/application/"/>
+    <url>/2022/11/11/application/</url>
+    
+    <content type="html"><![CDATA[<p><a href="../Clash.for.Windows.Setup.0.20.7.exe">clash下载</a> <a href="https://github.com/Fndroid/clash_for_windows_pkg/releases">clash github地址</a> <a href="https://youyun9.com/auth/login">自用套餐地址</a></p><p><img src="/../pictures/clash.jpg"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>工具</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>翻墙软件</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>EXCEL导入模板</title>
+    <link href="/2022/11/09/javaExcelImport/"/>
+    <url>/2022/11/09/javaExcelImport/</url>
+    
+    <content type="html"><![CDATA[<pre><code class="java">import cn.hutool.core.io.IoUtil;import cn.hutool.poi.excel.ExcelUtil;import cn.hutool.poi.excel.ExcelWriter;import org.apache.poi.hssf.usermodel.HSSFWorkbook;import org.apache.poi.poifs.filesystem.POIFSFileSystem;import org.apache.poi.ss.usermodel.Row;import org.apache.poi.ss.usermodel.Sheet;import org.apache.poi.ss.usermodel.Workbook;import org.apache.poi.xssf.usermodel.XSSFWorkbook;import javax.servlet.ServletOutputStream;import javax.servlet.http.HttpServletResponse;import java.io.File;import java.io.FileInputStream;import java.io.IOException;import java.io.InputStream;import java.lang.reflect.Field;import java.lang.reflect.Method;import java.text.ParseException;import java.text.SimpleDateFormat;import java.util.*;public class ExcelHelper &#123;    /**     * 将excel解析为指定的对象集合 &lt;br&gt;     * 例如： 要导入的excel格式为 &lt;br&gt;     * 第1行：  | id   | username | password　|(与对象的字段对应)&lt;br&gt;     * 第2行：  |1     | 小周　　 | 123456    |&lt;br&gt;     * 第3行：  |2     | 老王　　 | 123456    |&lt;br&gt;     * 调用： analysisExcel(file,User.class);     * @param file-----要解析的excel文件     * @param c--------指定的对象类型     * @throws IOException     * @return---------对象集合     */    public static &lt;T&gt; List&lt;T&gt; analysisExcel(File file,Class&lt;T&gt; c) &#123;        List&lt;T&gt; list = new ArrayList&lt;T&gt;();        InputStream inputStream = null;        String fileName = null;        Workbook wb = null;        try&#123;            inputStream = new FileInputStream(file);            fileName = file.getName();            if(fileName.endsWith(&quot;.xls&quot;) || fileName.endsWith(&quot;.xlsx&quot;))&#123;                //如果是2003版本                if(fileName.endsWith(&quot;.xls&quot;))&#123;                    //1.先解析文件                    POIFSFileSystem fs = new POIFSFileSystem(inputStream);                    wb = new HSSFWorkbook(fs);                &#125;else if( fileName.endsWith(&quot;.xlsx&quot;))&#123;//如果是2007以上版本                    wb = new XSSFWorkbook(inputStream);                &#125;else&#123;                    return null;                &#125;            &#125;        &#125;catch(IOException e)&#123;            e.printStackTrace();        &#125;        Sheet sheet = wb.getSheetAt(0);        //获取第一行（标题行）        Row row1 = sheet.getRow(0);        //总列数        int colNum = row1.getPhysicalNumberOfCells();        //总行数        int rowNum = sheet.getLastRowNum();        //将标题行一一放入数组        String[] titles = new String[colNum];        for(int i = 0 ; i &lt; colNum ; i++)&#123;            titles[i] = row1.getCell(i).getStringCellValue();        &#125;        //获取指定对象所有的字段        Field fields[] = c.getDeclaredFields();        Map&lt;String,Field&gt; fieldMap = new HashMap&lt;String, Field&gt;();        for (int i = 0; i &lt; fields.length; i++) &#123;            fieldMap.put(fields[i].getName(), fields[i]);        &#125;        //使用反射机制，将值存入对应对象中        try &#123;            for (int i = 1; i &lt; rowNum+1; i++) &#123;                T t =c.newInstance();                for (int j = 0; j &lt; titles.length; j++) &#123;                    //当excel中有这个字段                    if(fieldMap.containsKey(titles[j]))&#123;                        String fieldName = titles[j];                        String methodName = &quot;set&quot; + fieldName.substring(0,1).toUpperCase()+fieldName.substring(1);                        //调用该字段对应的set方法                        Class cc = fieldMap.get(titles[j]).getType();                        Method method = c.getMethod(methodName, cc);                        String value = String.valueOf(sheet.getRow(i).getCell(j));                        method.invoke(t, parseValue(value, cc));                    &#125;                &#125;                list.add(t);            &#125;        &#125; catch (Exception e) &#123;            e.printStackTrace();        &#125;        return list;    &#125;    /**     * 将字符串转化为指定类型的对象     * @param s----要转化的字符串     * @param c----目标对象类型     * @return     */    private static Object parseValue(String s,Class c)&#123;        Object obj = null;        String className = c.getName();        //excel中的数字解析之后可能末尾会有.0，需要去除        if(s.endsWith(&quot;.0&quot;)) s = s.substring(0, s.length()-2);        if(className.equals(&quot;java.lang.Integer&quot;))&#123; //Integer            obj =  new Integer(s);        &#125;else if(className.equals(&quot;int&quot;))&#123; //int            obj = (int)Integer.parseInt(s);        &#125;else if(className.equals(&quot;java.lang.String&quot;))&#123; //String            obj = s;        &#125;else if(className.equals(&quot;java.lang.Double&quot;))&#123; //Double            obj = new Double(s);        &#125;else if(className.equals(&quot;double&quot;))&#123; //double            obj = (double)new Double(s);        &#125;else if(className.equals(&quot;java.lang.Float&quot;))&#123; //Float            obj = new Float(s);        &#125;else if(className.equals(&quot;float&quot;))&#123; //float            obj = (float)new Float(s);        &#125;else if(className.equals(&quot;java.util.Date&quot;))&#123; //Date            SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);            try &#123;                obj = sdf.parse(s);            &#125; catch (ParseException e) &#123;                e.printStackTrace();            &#125;        &#125;else if(className.equals(&quot;long&quot;))&#123; //long            obj = Long.parseLong(s);        &#125;else if(className.equals(&quot;java.util.Long&quot;))&#123; //Long            obj = new Long(s);        &#125;        return obj;    &#125;    public static void excelMap(List list , HttpServletResponse response , LinkedHashMap&lt;String ,String&gt; map,String fileName) throws Exception&#123;        // 通过工具类创建writer，默认创建xls格式        ExcelWriter writer = ExcelUtil.getWriter();        for (Map.Entry&lt;String, String&gt; entry :  map.entrySet()) &#123;            writer.addHeaderAlias(entry.getKey() , entry.getValue() );        &#125;        // 一次性写出内容，使用默认样式，强制输出标题        writer.write(list,true);        //response为HttpServletResponse对象        response.setContentType(&quot;application/vnd.ms-excel;charset=utf-8&quot;);        //test.xls是弹出下载对话框的文件名，不能为中文，中文请自行编码        response.setHeader(&quot;Content-Disposition&quot;, &quot;attachment;filename=&quot; + fileName);        ServletOutputStream out = response.getOutputStream();        writer.flush(out);        // 关闭writer，释放内存        writer.close();        //此处记得关闭输出Servlet流        IoUtil.close(out);    &#125;&#125;</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>java</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>工具类</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>构建树</title>
+    <link href="/2022/11/09/javaTreeBuild/"/>
+    <url>/2022/11/09/javaTreeBuild/</url>
+    
+    <content type="html"><![CDATA[<pre><code class="java">public static List&lt;TreeObject&gt; buildTree(List&lt;TreeObject&gt; nodes) &#123;    Map&lt;String, List&lt;TreeObject&gt;&gt; sub = nodes.stream().filter(node -&gt; !&quot;D001&quot;.equals(node.getDeptCode())).collect(Collectors.groupingBy(node -&gt; node.getParentDeptId()));    nodes.forEach(node -&gt; node.setChildren(sub.get(node.getId())));    return nodes.stream().filter(node -&gt; &quot;D001&quot;.equals(node.getDeptCode())).collect(Collectors.toList());&#125;</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>java</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>工具类</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>面试总结</title>
+    <link href="/2022/11/09/spring_init/"/>
+    <url>/2022/11/09/spring_init/</url>
+    
+    <content type="html"><![CDATA[<h3 id="spring初始化过程口语化表达"><a href="#spring初始化过程口语化表达" class="headerlink" title="spring初始化过程口语化表达"></a>spring初始化过程口语化表达</h3><ol><li>AbstractApplicationContext.refresh()方法</li><li>通过obtainFreshBeanFactory()方法获取一个beanFactory,在该方法内，spring会创建一个新的beanFactory并通过loadBeanDefinitions()方法加载并解析bean，将bean封装成BeanDefinitions</li><li>之后spring会通过invokeBeanFactoryPostProcessors（）方法调用beanFactory的后置处理器</li><li>接着通过registerBeanPostProcessors（）方法加载bean的后置处理器，只不过bean的后置处理器现在不会触发，等到bean的初始化前后才会触发</li><li>然后spring会通过finishBeanFactoryInitialization（）实例化所有剩余的bean的实例</li><li>最后通过finishRefresh（）方法完成容器刷新<span id="more"></span></li></ol><h3 id="spring-bean生命周期"><a href="#spring-bean生命周期" class="headerlink" title="spring bean生命周期"></a>spring bean生命周期</h3><ol><li>首先是实例化bean对象，通过createBeanInstance()方法反射获取bean的构造方法进行实例化</li><li>之后调用polulateBean()方法进行属性填充</li><li>然后调用initializeBean()进行初始化，其中会先调用invokeAwareMethods（）方法判断bean是否实现beanNameAware,beanClassLoaderAware,BeanFactoryAware之类的接口，如果实现了就将其加载进来</li><li>之后会调用applyBeanPostProcessorsBeforeInitialization（）进行初始化的前置处理</li><li>之后会调用invokeInitMethods（）方法进行初始化，该方法中会判断bean有没有实现InitializingBean接口，如果有就通过afterPropertiesSet（）方法设置，</li><li>如果使用xml的话，会调用init-method方法进行初始化 </li><li>接着spring会调用applyBeanPostProcessorsAfterInitialization（）方法完成初始化的后置处理，aop就发生在该阶段</li><li>初始化之后就可以正常使用</li><li>进入销毁阶段后，spring会判断bean有没有disposableBean接口，有就调用其destroy()方法，如果bean配置了自定义的destroy-method,最后也会调用自定义的destroy-method方法</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>java</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>面试</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>获取一定时间间隔的日期</title>
+    <link href="/2022/11/09/timeSplite/"/>
+    <url>/2022/11/09/timeSplite/</url>
+    
+    <content type="html"><![CDATA[<pre><code class="java">import cn.hutool.core.collection.CollectionUtil;import java.text.SimpleDateFormat;import java.time.ZoneId;import java.util.*;public class SplitDateUtil &#123;    private static final SimpleDateFormat monthDateFormat = new SimpleDateFormat(&quot;MM&quot;);    //将时间段按星期分割    public static List&lt;Range&gt; splitToWeeks(Date start, Date end) &#123;        List&lt;Range&gt; result = new ArrayList&lt;&gt;();        result.add(Range.create(start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));        Date from = new Date(start.getTime() + 7L * 24 * 3600 * 1000);        Date weekEnd = cn.hutool.core.date.DateUtil.endOfWeek(end);        while (from.compareTo(weekEnd) &lt;= 0) &#123;            Date dt = cn.hutool.core.date.DateUtil.beginOfWeek(from);            CollectionUtil.getLast(result).end(new Date(dt.getTime() - 24L * 3600 * 1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());            CollectionUtil.getLast(result).setMonth(monthDateFormat.format(new Date(dt.getTime() - 24L * 3600 * 1000)));            result.add(Range.create(dt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));            from.setTime(from.getTime() + 7L * 24 * 3600 * 1000);        &#125;        CollectionUtil.getLast(result).end(end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());        CollectionUtil.getLast(result).setMonth(monthDateFormat.format(end));        return result;    &#125;    //将时间段按照月分割    public static List&lt;Range&gt; splitToMonths(Date start, Date end) &#123;        List&lt;Range&gt; result = new ArrayList&lt;&gt;();        result.add(Range.create(start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));        Calendar cal = Calendar.getInstance();        cal.setTime(start);        cal.add(Calendar.MONTH, 1);        Date monthEnd = cn.hutool.core.date.DateUtil.endOfMonth(end);        while (cal.getTimeInMillis() &lt;= monthEnd.getTime()) &#123;            Date dt = cn.hutool.core.date.DateUtil.beginOfMonth(cal.getTime());            CollectionUtil.getLast(result).end(new Date(dt.getTime() - 24L * 3600 * 1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());            CollectionUtil.getLast(result).setMonth(monthDateFormat.format(new Date(dt.getTime() - 24L * 3600 * 1000)));            result.add(Range.create(dt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));            cal.add(Calendar.MONTH, 1);        &#125;        CollectionUtil.getLast(result).end(end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());        CollectionUtil.getLast(result).setMonth(monthDateFormat.format(end));        return result;    &#125;    //将时间段按照季度分割    public static List&lt;Range&gt; splitToQuarts(Date start, Date end) &#123;        List&lt;Range&gt; result = new ArrayList&lt;&gt;();        result.add(Range.create(start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));        Calendar cal = Calendar.getInstance();        cal.setTime(start);        cal.add(Calendar.MONTH, 3);        Date quartEnd = cn.hutool.core.date.DateUtil.endOfQuarter(end);        while (cal.getTimeInMillis() &lt;= quartEnd.getTime()) &#123;            Date dt = cn.hutool.core.date.DateUtil.beginOfQuarter(cal.getTime());            CollectionUtil.getLast(result).end(new Date(dt.getTime() - 24L * 3600 * 1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());            if (cal.get(Calendar.MONTH) &gt;= 1 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 3) &#123;                CollectionUtil.getLast(result).setMonth(&quot;4&quot;);            &#125; else if (cal.get(Calendar.MONTH) &gt;= 4 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 6) &#123;                CollectionUtil.getLast(result).setMonth(&quot;1&quot;);            &#125; else if (cal.get(Calendar.MONTH) &gt;= 7 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 9) &#123;                CollectionUtil.getLast(result).setMonth(&quot;2&quot;);            &#125; else if (cal.get(Calendar.MONTH) &gt;= 10 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 12) &#123;                CollectionUtil.getLast(result).setMonth(&quot;3&quot;);            &#125;            result.add(Range.create(dt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));            cal.add(Calendar.MONTH, 3);        &#125;        CollectionUtil.getLast(result).end(end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());        if (cal.get(Calendar.MONTH) &gt;= 1 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 3) &#123;            CollectionUtil.getLast(result).setMonth(&quot;4&quot;);        &#125; else if (cal.get(Calendar.MONTH) &gt;= 4 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 6) &#123;            CollectionUtil.getLast(result).setMonth(&quot;1&quot;);        &#125; else if (cal.get(Calendar.MONTH) &gt;= 7 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 9) &#123;            CollectionUtil.getLast(result).setMonth(&quot;2&quot;);        &#125; else if (cal.get(Calendar.MONTH) &gt;= 10 &amp;&amp; cal.get(Calendar.MONTH) &lt;= 12) &#123;            CollectionUtil.getLast(result).setMonth(&quot;3&quot;);        &#125;        return result;    &#125;    //将时间段按照半年分割    public static List&lt;Range&gt; splitToHalfOfYears(Date start, Date end) &#123;        List&lt;Range&gt; result = new ArrayList&lt;&gt;();        result.add(Range.create(start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));        Calendar cal = Calendar.getInstance();        cal.setTime(start);        cal.add(Calendar.MONTH, 6);        Calendar calOne = Calendar.getInstance();        calOne.setTime(end);        int mon = cal.get(Calendar.MONTH);        Calendar halfYearEnd = cn.hutool.core.date.DateUtil.endOfMonth(calOne);        while (cal.getTimeInMillis() &lt;= halfYearEnd.getTimeInMillis()) &#123;            mon = cal.get(Calendar.MONTH);            Calendar cal1 = Calendar.getInstance();            if (mon &lt; 6) &#123;                cal1.setTimeInMillis(cal.getTimeInMillis());                cal1.set(Calendar.MONTH, 0);            &#125; else &#123;                cal1.setTimeInMillis(cal.getTimeInMillis());                cal1.set(Calendar.MONTH, 6);            &#125;            Date dt = cn.hutool.core.date.DateUtil.beginOfMonth(cal1.getTime());            CollectionUtil.getLast(result).end(new Date(dt.getTime() - 24L * 3600 * 1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());            result.add(Range.create(dt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));            cal.add(Calendar.MONTH, 6);        &#125;        CollectionUtil.getLast(result).end(end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());        return result;    &#125;    //将时间段按照年分割    public static List&lt;Range&gt; splitToYears(Date start, Date end) &#123;        List&lt;Range&gt; result = new ArrayList&lt;&gt;();        result.add(Range.create(start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));        Calendar cal = Calendar.getInstance();        cal.setTime(start);        cal.add(Calendar.YEAR, 1);        Date yearEnd = cn.hutool.core.date.DateUtil.endOfYear(end);        while (cal.getTimeInMillis() &lt;= yearEnd.getTime()) &#123;            Date dt = cn.hutool.core.date.DateUtil.beginOfYear(cal.getTime());            CollectionUtil.getLast(result).end(new Date(dt.getTime() - 24L * 3600 * 1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());            result.add(Range.create(dt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));            cal.add(Calendar.YEAR, 1);        &#125;        CollectionUtil.getLast(result).end(end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());        return result;    &#125;    //根据年，月，第几周获取时间范围    public static Map getWeekDateLimits(String year, String month, String week) &#123;        Map result = new HashMap();        SimpleDateFormat dft = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);        Calendar c1 = Calendar.getInstance();        c1.set(Calendar.YEAR, Integer.parseInt(year));        c1.set(Calendar.MONTH, Integer.parseInt(month) - 1);        c1.set(Calendar.DAY_OF_WEEK, 2);        c1.set(Calendar.WEEK_OF_MONTH, Integer.parseInt(week));        Date time1 = c1.getTime();        String begin = dft.format(time1);        c1.set(Calendar.DATE, c1.get(Calendar.DATE) + 6);        Date time2 = c1.getTime();        String end = dft.format(time2);        result.put(&quot;begin&quot;, begin);        result.put(&quot;end&quot;, end);        return result;    &#125;    public static void main(String[] args) &#123;        try &#123;            Calendar c = Calendar.getInstance();            c.set(Calendar.YEAR, 2021);            c.set(Calendar.MONTH, (5 - 1));            c.setFirstDayOfWeek(Calendar.MONDAY);            System.out.println( c.get(Calendar.YEAR) + &quot;年&quot; + (c.get(Calendar.MONTH) + 1) + &quot;月&quot;);            System.out.println(&quot;天数：&quot; + c.getActualMaximum(Calendar.DAY_OF_MONTH));            System.out.println(&quot;Actual周数：&quot; + c.getActualMaximum(Calendar.WEEK_OF_MONTH));            System.out.println(&quot;Max周数：&quot; + c.getMaximum(Calendar.WEEK_OF_MONTH));            for (int i = 0; i &lt; 6; i++) &#123;                System.out.println(getWeekDateLimits(2021 + &quot;&quot;, 5 + &quot;&quot;, (i + 1) + &quot;&quot;));            &#125;        &#125; catch (Exception e) &#123;            e.printStackTrace();        &#125;    &#125;&#125;</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>java</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>工具类</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  
+</search>
