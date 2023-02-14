@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>stream groupby用法</title>
+    <link href="/2023/02/14/stream%20groupby/"/>
+    <url>/2023/02/14/stream%20groupby/</url>
+    
+    <content type="html"><![CDATA[<h3 id="stream-groupby用法"><a href="#stream-groupby用法" class="headerlink" title="stream groupby用法"></a>stream groupby用法</h3><pre><code class="hljs">//aMap&lt;Long,List&lt;Long&gt;&gt; exhibitionPitemMap = list.stream().collect(Collectors.groupingBy(TestDTO1::getLevle1CategoryId, Collectors.mapping(TestDTO1::getPitemId, Collectors.toList())));//bMap&lt;Long, List&lt;TestDTO2&gt;&gt; categoryPitemMap = list.stream().collect(Collectors.groupingBy(TestDTO2::getLevle1CategoryId));</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>java</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>记录</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>PotPlayer</title>
     <link href="/2022/11/11/potplayer/"/>
     <url>/2022/11/11/potplayer/</url>
