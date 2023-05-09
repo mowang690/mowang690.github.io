@@ -24,7 +24,7 @@
 <meta property="og:description" content="常用方法记录">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-02-14T00:52:12.312Z">
-<meta property="article:modified_time" content="2023-03-17T07:19:44.471Z">
+<meta property="article:modified_time" content="2023-03-17T07:40:55.719Z">
 <meta property="article:author" content="wang">
 <meta property="article:tag" content="记录">
 <meta name="twitter:card" content="summary_large_image">
@@ -209,7 +209,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          721 字
+          1.2k 字
         
       </span>
     
@@ -220,7 +220,7 @@
         
         
         
-          7 分钟
+          10 分钟
         
       </span>
     
@@ -298,6 +298,8 @@ int month = year*12 + two.getMonthValue - one.getMonthValue
 LocalDate start = now.with(TemporalAdjusters.firstDayOfMonth());
 LocalDate end = now.with(TemporalAdjusters.lastDayOfMonth());
 </code></pre>
+<h3 id="当季度第一天，最后一天"><a href="#当季度第一天，最后一天" class="headerlink" title="当季度第一天，最后一天"></a>当季度第一天，最后一天</h3><figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-built_in">Month</span> <span class="hljs-built_in">month</span> = <span class="hljs-built_in">now</span>.getMonth();<br>LocalDate quarterStart = LocalDate.of(<span class="hljs-built_in">now</span>.getYear(),<span class="hljs-built_in">month</span>.firstMonthOfQuarter(),<span class="hljs-number">1</span>);<br><span class="hljs-built_in">Month</span> endQuarterMonth = <span class="hljs-built_in">Month</span>.of(<span class="hljs-built_in">month</span>.firstMonthOfQuarter().getValue()+<span class="hljs-number">2</span>);<br>LocalDate quarterEnd = LocalDate.of(<span class="hljs-built_in">now</span>.getYear(),endQuarterMonth,endQuarterMonth.<span class="hljs-built_in">length</span>(<span class="hljs-built_in">now</span>.isLeapYear()));<br></code></pre></td></tr></table></figure>
+<h3 id="当年第一天，最后一天"><a href="#当年第一天，最后一天" class="headerlink" title="当年第一天，最后一天"></a>当年第一天，最后一天</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">LocalDate yearStart = now.<span class="hljs-keyword">with</span>(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">TemporalAdjusters</span>.</span></span>first<span class="hljs-constructor">DayOfYear()</span>);<br>LocalDate yearEnd = now.<span class="hljs-keyword">with</span>(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">TemporalAdjusters</span>.</span></span>last<span class="hljs-constructor">DayOfYear()</span>);<br></code></pre></td></tr></table></figure>
 
                 
               </div>
