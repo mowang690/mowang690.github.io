@@ -16,15 +16,15 @@
   <meta name="author" content="wang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="常用方法记录">
+    <meta name="description" content="aspose破解">
 <meta property="og:type" content="article">
-<meta property="og:title" content="常用方法记录">
-<meta property="og:url" content="http://example.com/2023/02/14/stream%20groupby/index.html">
+<meta property="og:title" content="aspose破解">
+<meta property="og:url" content="http://example.com/2024/03/19/aspose%20word%20for%20java/index.html">
 <meta property="og:site_name" content="天动万象">
-<meta property="og:description" content="常用方法记录">
+<meta property="og:description" content="aspose破解">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-02-14T00:52:12.312Z">
-<meta property="article:modified_time" content="2024-03-19T10:58:41.655Z">
+<meta property="article:published_time" content="2024-03-19T10:57:09.256Z">
+<meta property="article:modified_time" content="2024-03-19T10:58:30.256Z">
 <meta property="article:author" content="wang">
 <meta property="article:tag" content="记录">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +33,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>常用方法记录 - 天动万象</title>
+  <title>aspose破解 - 天动万象</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -186,7 +186,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="常用方法记录"></span>
+            <span id="subtitle" data-typed-text="aspose破解"></span>
           
         </div>
 
@@ -197,8 +197,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-02-14 08:52" pubdate>
-          2023年2月14日 早上
+        <time datetime="2024-03-19 18:57" pubdate>
+          2024年3月19日 晚上
         </time>
       </span>
     
@@ -209,7 +209,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          474 字
         
       </span>
     
@@ -220,7 +220,7 @@
         
         
         
-          10 分钟
+          4 分钟
         
       </span>
     
@@ -266,7 +266,7 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">常用方法记录</h1>
+            <h1 style="display: none">aspose破解</h1>
             
               <p class="note note-info">
                 
@@ -279,27 +279,7 @@
             
               <div class="markdown-body">
                 
-                <h3 id="stream-groupby用法"><a href="#stream-groupby用法" class="headerlink" title="stream groupby用法"></a>stream groupby用法</h3><pre><code class="hljs">//a
-Map&lt;Long,List&lt;Long&gt;&gt; exhibitionPitemMap = list.stream().collect(Collectors.groupingBy(TestDTO1::getLevle1CategoryId, Collectors.mapping(TestDTO1::getPitemId, Collectors.toList())));
-//b
-Map&lt;Long, List&lt;TestDTO2&gt;&gt; categoryPitemMap = list.stream().collect(Collectors.groupingBy(TestDTO2::getLevle1CategoryId));
-</code></pre>
-<h3 id="map遍历"><a href="#map遍历" class="headerlink" title="map遍历"></a>map遍历</h3><pre><code class="hljs">map.forEach((key,value) -&gt; &#123;
-&#125;)
-</code></pre>
-<h3 id="两个时间求月差"><a href="#两个时间求月差" class="headerlink" title="两个时间求月差"></a>两个时间求月差</h3><pre><code class="hljs">LocalDate one = LocalDate.of(xxxx,xx,xx);
-LocalDate two = LocalDate.of(xxxx,xx,xx);
-//年差
-int year = two.getYear() - one.getYear();
-//月差
-int month = year*12 + two.getMonthValue - one.getMonthValue
-</code></pre>
-<h3 id="当月第一天，最后一天"><a href="#当月第一天，最后一天" class="headerlink" title="当月第一天，最后一天"></a>当月第一天，最后一天</h3><pre><code class="hljs">LocalDate now = LocalDate.now();
-LocalDate start = now.with(TemporalAdjusters.firstDayOfMonth());
-LocalDate end = now.with(TemporalAdjusters.lastDayOfMonth());
-</code></pre>
-<h3 id="当季度第一天，最后一天"><a href="#当季度第一天，最后一天" class="headerlink" title="当季度第一天，最后一天"></a>当季度第一天，最后一天</h3><figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-built_in">Month</span> <span class="hljs-built_in">month</span> = <span class="hljs-built_in">now</span>.getMonth();<br>LocalDate quarterStart = LocalDate.of(<span class="hljs-built_in">now</span>.getYear(),<span class="hljs-built_in">month</span>.firstMonthOfQuarter(),<span class="hljs-number">1</span>);<br><span class="hljs-built_in">Month</span> endQuarterMonth = <span class="hljs-built_in">Month</span>.of(<span class="hljs-built_in">month</span>.firstMonthOfQuarter().getValue()+<span class="hljs-number">2</span>);<br>LocalDate quarterEnd = LocalDate.of(<span class="hljs-built_in">now</span>.getYear(),endQuarterMonth,endQuarterMonth.<span class="hljs-built_in">length</span>(<span class="hljs-built_in">now</span>.isLeapYear()));<br></code></pre></td></tr></table></figure>
-<h3 id="当年第一天，最后一天"><a href="#当年第一天，最后一天" class="headerlink" title="当年第一天，最后一天"></a>当年第一天，最后一天</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">LocalDate yearStart = now.<span class="hljs-keyword">with</span>(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">TemporalAdjusters</span>.</span></span>first<span class="hljs-constructor">DayOfYear()</span>);<br>LocalDate yearEnd = now.<span class="hljs-keyword">with</span>(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">TemporalAdjusters</span>.</span></span>last<span class="hljs-constructor">DayOfYear()</span>);<br></code></pre></td></tr></table></figure>
+                <h3 id="aspose-word-to-pdf-for-java21-6-破解"><a href="#aspose-word-to-pdf-for-java21-6-破解" class="headerlink" title="aspose word to pdf for java21.6 破解"></a>aspose word to pdf for java21.6 破解</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">//在转化前调用</span><br>Class&lt;?&gt; aClass = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Class</span>.</span></span><span class="hljs-keyword">for</span><span class="hljs-constructor">Name(<span class="hljs-string">&quot;com.aspose.words.zzXyu&quot;</span>)</span>;<br>java.lang.reflect.Field zzZXG = aClass.get<span class="hljs-constructor">DeclaredField(<span class="hljs-string">&quot;zzZXG&quot;</span>)</span>;<br>zzZXG.set<span class="hljs-constructor">Accessible(<span class="hljs-params">true</span>)</span>;<br>java.lang.reflect.Field modifiersField = zzZXG.get<span class="hljs-constructor">Class()</span>.get<span class="hljs-constructor">DeclaredField(<span class="hljs-string">&quot;modifiers&quot;</span>)</span>;<br>modifiersField.set<span class="hljs-constructor">Accessible(<span class="hljs-params">true</span>)</span>;<br>modifiersField.set<span class="hljs-constructor">Int(<span class="hljs-params">zzZXG</span>, <span class="hljs-params">zzZXG</span>.<span class="hljs-params">getModifiers</span>()</span> &amp; ~Modifier.FINAL);<br>zzZXG.set(null,<span class="hljs-keyword">new</span> byte<span class="hljs-literal">[]</span>&#123;<span class="hljs-number">76</span>, <span class="hljs-number">73</span>, <span class="hljs-number">67</span>, <span class="hljs-number">69</span>, <span class="hljs-number">78</span>, <span class="hljs-number">83</span>, <span class="hljs-number">69</span>, <span class="hljs-number">68</span>&#125;);<br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -346,18 +326,12 @@ LocalDate end = now.with(TemporalAdjusters.lastDayOfMonth());
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/03/16/sql_with_date/" title="SQL按照日期查询">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">SQL按照日期查询</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/11/11/potplayer/" title="PotPlayer">
-                        <span class="hidden-mobile">PotPlayer</span>
+                      <a href="/2023/03/16/sql_with_date/" title="SQL按照日期查询">
+                        <span class="hidden-mobile">SQL按照日期查询</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
